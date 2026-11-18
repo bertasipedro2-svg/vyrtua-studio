@@ -47,3 +47,12 @@ WhatsApp comercial: https://wa.me/5511934515159
 - O catálogo exibe somente produtos com `published: true`; o preço é mostrado somente se `priceCents` for inteiro não negativo. O botão de contato é apenas consulta.
 - Para publicar produtos futuramente, validar dados, fotos e valores antes de editar o JSON. Um painel administrativo com backend ainda não foi implementado.
 - A home tem um link para o catálogo estruturado. Os itens ilustrativos na home continuam sendo demonstrações separadas.
+
+## Editor de catálogo (sem backend)
+
+- `editor-catalogo.html` é uma ferramenta de preparação de produtos, **não** um painel administrativo protegido.
+- Permite cadastrar, editar e excluir itens do rascunho, informar cores, tamanhos, preço opcional, estoque opcional, imagem e publicação.
+- Guarda o rascunho apenas no armazenamento local do navegador; importe e exporte `catalog.json` para fazer backup.
+- Para publicar, substitua manualmente o conteúdo de `data/catalog.json` no GitHub e faça commit. Nenhuma mudança feita no editor altera a loja automaticamente.
+- Não coloque informações pessoais de clientes, senhas ou tokens no editor ou no repositório público.
+- Antes de publicar itens, confirme preço, estoque, direitos de uso das imagens e condições de produção.
