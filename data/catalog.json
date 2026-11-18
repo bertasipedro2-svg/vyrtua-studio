@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "store": {
+    "name": "VYRTUA STUDIO",
+    "currency": "BRL",
+    "catalogStatus": "preparacao",
+    "whatsapp": "5511934515159"
+  },
+  "categories": [
+    {
+      "id": "camisetas-basicas",
+      "name": "Camisetas básicas",
+      "description": "Peças essenciais para personalização."
+    },
+    {
+      "id": "oversized",
+      "name": "Oversized",
+      "description": "Modelagens amplas e streetwear."
+    },
+    {
+      "id": "dry-fit",
+      "name": "Dry fit",
+      "description": "Roupas para esporte e movimento."
+    },
+    {
+      "id": "croppeds",
+      "name": "Croppeds",
+      "description": "Peças femininas personalizáveis."
+    },
+    {
+      "id": "moletons",
+      "name": "Moletons",
+      "description": "Peças de frio e personalização."
+    },
+    {
+      "id": "bones",
+      "name": "Bonés",
+      "description": "Acessórios personalizáveis."
+    },
+    {
+      "id": "kits",
+      "name": "Kits",
+      "description": "Conjuntos configuráveis de produtos."
+    },
+    {
+      "id": "estampas",
+      "name": "Estampas",
+      "description": "Artes para aplicar nas peças."
+    },
+    {
+      "id": "sob-encomenda",
+      "name": "Sob encomenda",
+      "description": "Pedidos de personalização especiais."
+    }
+  ],
+  "products": [],
+  "productFields": {
+    "id": "string, único",
+    "name": "string",
+    "slug": "string",
+    "categoryId": "id da categoria",
+    "description": "string",
+    "images": "array de URLs ou caminhos de imagens autorizadas",
+    "colors": "array de {name,hex}",
+    "sizes": "array de tamanhos",
+    "variants": "array de {sku,color,size,priceCents,stock}",
+    "priceCents": "inteiro em centavos, somente após confirmação",
+    "stock": "inteiro ou null, somente após confirmação",
+    "productionDays": "inteiro ou null",
+    "published": "boolean, padrão false",
+    "customizable": "boolean",
+    "printAreas": "array de áreas autorizadas",
+    "shippingNotes": "string"
+  }
+}
