@@ -64,3 +64,7 @@ O catálogo agora apresenta cartões das categorias, filtros mobile, opção de 
 ## Experiência futurista 3D (protótipo visual)
 
 A home agora inclui uma escultura de marca com profundidade e anéis animados em CSS 3D, arraste para inclinação no iPhone/mouse, perspectiva interativa na prévia ilustrativa do Creative Lab, grade de fundo e efeitos de hover. Há respeito a `prefers-reduced-motion`. Isso **não** é um modelo de roupa 3D verdadeiro, nem simulação de caimento ou impressão. Acessibilidade, desempenho e interação em dispositivos reais ainda precisam ser testados.
+
+## Showroom 3D de camiseta (protótipo)
+
+O arquivo `showroom-3d.html` apresenta uma camiseta ilustrada com frente e costas em SVG, projetadas em um elemento CSS 3D que pode girar 360° por arraste ou controle deslizante. Inclui seleção de cor, arte geométrica, posição da arte, tamanho conceitual e mensagem de consulta no WhatsApp. **Não é um modelo tridimensional real com geometria de tecido**: não representa caimento, medidas ou estampa para produção. A home aponta para esse showroom. Verificar funcionamento no Safari do iPhone antes de tratá-lo como testado.
