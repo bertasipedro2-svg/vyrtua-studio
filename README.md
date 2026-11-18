@@ -60,3 +60,7 @@ WhatsApp comercial: https://wa.me/5511934515159
 ### Melhorias de navegação no catálogo
 
 O catálogo agora apresenta cartões das categorias, filtros mobile, opção de limpar filtros e mensagens de estado vazio distintas para coleção sem produtos e busca sem resultados. Essas mudanças não publicam itens nem habilitam vendas.
+
+## Experiência futurista 3D (protótipo visual)
+
+A home agora inclui uma escultura de marca com profundidade e anéis animados em CSS 3D, arraste para inclinação no iPhone/mouse, perspectiva interativa na prévia ilustrativa do Creative Lab, grade de fundo e efeitos de hover. Há respeito a `prefers-reduced-motion`. Isso **não** é um modelo de roupa 3D verdadeiro, nem simulação de caimento ou impressão. Acessibilidade, desempenho e interação em dispositivos reais ainda precisam ser testados.
