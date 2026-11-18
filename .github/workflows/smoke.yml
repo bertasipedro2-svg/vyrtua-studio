@@ -14,3 +14,6 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/smoke.cjs
+      - run: npm install --no-save --package-lock=false @playwright/test@1.51.1
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npx playwright test
