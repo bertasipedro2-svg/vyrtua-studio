@@ -39,3 +39,11 @@ Se houver 404, verifique o status da implantação em **Actions** e a mensagem d
 ## Contato
 
 WhatsApp comercial: https://wa.me/5511934515159
+
+## Catálogo estruturado
+
+- `catalogo.html`: página responsiva de catálogo com pesquisa, filtros por categoria, ordenação e estados vazios.
+- `data/catalog.json`: fonte estruturada das nove categorias e lista `products` vazia. Nenhum preço ou estoque foi inventado.
+- O catálogo exibe somente produtos com `published: true`; o preço é mostrado somente se `priceCents` for inteiro não negativo. O botão de contato é apenas consulta.
+- Para publicar produtos futuramente, validar dados, fotos e valores antes de editar o JSON. Um painel administrativo com backend ainda não foi implementado.
+- A home tem um link para o catálogo estruturado. Os itens ilustrativos na home continuam sendo demonstrações separadas.
