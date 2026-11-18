@@ -56,3 +56,7 @@ WhatsApp comercial: https://wa.me/5511934515159
 - Para publicar, substitua manualmente o conteúdo de `data/catalog.json` no GitHub e faça commit. Nenhuma mudança feita no editor altera a loja automaticamente.
 - Não coloque informações pessoais de clientes, senhas ou tokens no editor ou no repositório público.
 - Antes de publicar itens, confirme preço, estoque, direitos de uso das imagens e condições de produção.
+
+### Melhorias de navegação no catálogo
+
+O catálogo agora apresenta cartões das categorias, filtros mobile, opção de limpar filtros e mensagens de estado vazio distintas para coleção sem produtos e busca sem resultados. Essas mudanças não publicam itens nem habilitam vendas.
