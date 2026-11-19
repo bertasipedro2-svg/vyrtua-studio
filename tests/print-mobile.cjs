@@ -28,12 +28,19 @@ async function main() {
     const executablePath = process.env.PRINT_CHROMIUM;
     browser = await engine.launch(executablePath ? {executablePath} : {});
     const page = await browser.newPage(devices['iPhone 13']);
+    page.setDefaultTimeout(12_000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     let order, uploaded, savedProduct;
     await page.route('https://bwcfrgbvrhwbcjqdbtza.supabase.co/**', async route => {
       const {pathname} = new URL(route.request().url());
       const method = route.request().method();
+      const headers = {
+        'access-control-allow-origin': '*',
+        'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS',
+        'access-control-allow-headers': '*'
+      };
+      if (method === 'OPTIONS') return route.fulfill({status: 204, headers});
       let json;
       if (pathname === '/auth/v1/token') json = {access_token: 'ui-test', refresh_token: 'ui-test', expires_in: 3600};
       if (pathname === '/rest/v1/companies') json = [{id: company, name: 'Loja teste', memberships: [{role: 'owner'}]}];
@@ -53,7 +60,7 @@ async function main() {
         if (method === 'PATCH') Object.assign(order, route.request().postDataJSON());
         json = order ? [order] : [];
       }
-      if (json !== undefined) return route.fulfill({json});
+      if (json !== undefined) return route.fulfill({json, headers});
       await route.fulfill({status: 404});
     });
     await page.goto('http://127.0.0.1:' + server.address().port + '/print-dev.html');
