@@ -15,7 +15,7 @@ Abra `print-dev.html` em um servidor local (`python3 -m http.server 4173` na rai
 - Teste transacional no PostgreSQL dev confirmou isolamento entre duas empresas, autorização de owner e staff, transições e totais. As identidades SQL usadas em teste foram revertidas. Elas não são contas Auth.
 - A Data API devolvia HTTP 406 (`PGRST106`) para `print`. Após a migração `20261119044748`, a mesma consulta anônima devolveu HTTP 401 (`42501`), como esperado. O bucket `print-artworks` tem `public=false`.
 - O histórico remoto e os nomes dos arquivos de migração agora usam as mesmas versões. A migração do ciclo de pedidos é `20261119044409`.
-- O Chromium local foi bloqueado pelo ambiente antes de abrir o navegador. O workflow inclui um cenário de interface em WebKit com respostas simuladas. O cenário não substitui a homologação HTTP.
+- O [GitHub Actions](https://github.com/bertasipedro2-svg/vyrtua-studio/actions/runs/44461763694) confirmou os 14 testes Node e o cenário WebKit com perfil de iPhone 13, incluindo catálogo, editor, bytes do PNG recebidos por um servidor HTTP local e ciclo do pedido com respostas simuladas. A etapa HTTP autenticada ficou bloqueada pelos segredos ausentes.
 
 ## Homologação pendente
 
