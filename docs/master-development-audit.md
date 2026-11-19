@@ -15,3 +15,6 @@ Testes aprovados, navegação e orçamento validados, produtos e condições con
 
 ## Estado
 Testes novos escritos, execução ainda não confirmada. Nenhuma garantia de compatibilidade Safari físico. Nenhum serviço pago contratado ou merge realizado. Workflow existente pode consumir minutos; confirmar condições gratuitas antes de execuções manuais adicionais.
+
+## Segundo ciclo de validação
+Inspeção adicional: produto.html, editor-catalogo.html, creative-lab.html, showroom-floating-tee.html e data/catalog.json. Catálogo com 9 categorias e zero produtos. Corrigidos preço inteiro seguro e tratamento de entradas nulas e quantidades inválidas na sacola (7a27ac3). Editor aponta para branch de desenvolvimento, não main (cd58fc2). Consulta de workflows associados a PR para 183cf54 retornou lista vazia; isso não prova ausência de execuções por push. Consulta de status combinado para cd58fc2: {"statuses":[]}. Testes não confirmados; nenhuma execução manual disparada. Auditoria integral, testes físicos e verificação de licenças pendentes.
