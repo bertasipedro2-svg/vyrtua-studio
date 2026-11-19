@@ -3,7 +3,7 @@ const base='https://bwcfrgbvrhwbcjqdbtza.supabase.co';
 const key=process.env.SUPABASE_PUBLISHABLE_KEY;
 assert.ok(key?.startsWith('sb_publishable_'),'Missing development publishable key');
 async function call(path,token,opts={}){
- const r=await fetch(base+path,{...opts,headers:{apikey:key,...(token?{Authorization:'Bearer '+token}:{}),...opts.headers}});
+ const r=await fetch(base+path,{signal:AbortSignal.timeout(15000),...opts,headers:{apikey:key,...(token?{Authorization:'Bearer '+token}:{}),...opts.headers}});
  return r;
 }
 async function login(email,password){
@@ -15,6 +15,15 @@ async function rows(table,token,filter=''){
  const r=await call('/rest/v1/'+table+'?select=*'+filter,token,{headers:{'Accept-Profile':'print'}});
  assert.equal(r.status,200,'Data API failed: '+table);return r.json();
 }
+const anonymous = await call('/rest/v1/companies?select=id', null, {
+  headers: {'Accept-Profile': 'print'}
+});
+assert.equal(anonymous.status, 401, 'Anonymous access must be denied');
+assert.equal((await anonymous.json()).code, '42501', 'The print schema must be exposed but protected');
+console.log('PASS: live DEV Data API denies anonymous access to print');
+
+if (process.argv.includes('--anonymous-only')) process.exit(0);
+
 const a=await login(process.env.TEST_A_EMAIL,process.env.TEST_A_PASSWORD);
 const b=await login(process.env.TEST_B_EMAIL,process.env.TEST_B_PASSWORD);
 const ca=await rows('companies',a),cb=await rows('companies',b);

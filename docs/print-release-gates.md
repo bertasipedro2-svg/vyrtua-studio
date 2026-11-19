@@ -19,9 +19,11 @@ Abra `print-dev.html` em um servidor local (`python3 -m http.server 4173` na rai
 
 ## Homologação pendente
 
-1. No painel Auth do Supabase dev, crie duas contas fictícias confirmadas. Vincule-as a empresas distintas como owner e cadastre um produto ativo em cada empresa. Use o painel do GitHub para configurar os segredos `PRINT_DEV_PUBLISHABLE_KEY`, `PRINT_DEV_TEST_A_EMAIL`, `PRINT_DEV_TEST_A_PASSWORD`, `PRINT_DEV_TEST_B_EMAIL` e `PRINT_DEV_TEST_B_PASSWORD`.
+1. No painel Auth do Supabase dev, crie duas contas fictícias confirmadas. Use [seed-tenants.sql](../supabase/homologation/seed-tenants.sql) para vincular cada conta a uma empresa de teste e cadastrar um produto ativo por empresa. Use o painel do GitHub para configurar os segredos `PRINT_DEV_PUBLISHABLE_KEY`, `PRINT_DEV_TEST_A_EMAIL`, `PRINT_DEV_TEST_A_PASSWORD`, `PRINT_DEV_TEST_B_EMAIL` e `PRINT_DEV_TEST_B_PASSWORD`.
 2. Execute o workflow no ref `development/vyrtua-print-saas`. O teste HTTP verifica login e leitura do próprio catálogo, mais isolamento entre empresas.
 3. Com as duas contas, valide upload e download binário, permissões de alteração e o ciclo completo do pedido pelo painel. Faça o percurso também no Safari de um iPhone. Registre a execução e os resultados.
-4. Defina a remoção de estampas órfãs usando a API de Storage. Uma interrupção entre upload e gravação do pedido pode deixar um arquivo privado sem vínculo. A exclusão direta de metadados SQL não apaga o binário.
+4. Defina a remoção de estampas órfãs usando a API de Storage. Uma interrupção entre upload e gravação do pedido pode deixar um arquivo privado sem vínculo. O inventário [inspect-artworks.sql](../supabase/homologation/inspect-artworks.sql) lista candidatas com mais de 24 horas. A exclusão direta de metadados SQL não apaga o binário.
 
 Este procedimento usa exclusivamente a branch e o Supabase de desenvolvimento.
+
+Para repetir somente o teste anônimo, use a chave publicável DEV na variável de ambiente `SUPABASE_PUBLISHABLE_KEY` e execute `node print-core/api-smoke.mjs --anonymous-only`.
