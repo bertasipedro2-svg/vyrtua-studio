@@ -1,0 +1,19 @@
+name: Smoke tests
+on:
+  push:
+    branches: ['development/fase-1-profissional']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/smoke.cjs
+      - run: npm install --no-save --package-lock=false @playwright/test@1.51.1
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npx playwright test
