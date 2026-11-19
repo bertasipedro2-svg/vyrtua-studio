@@ -1,0 +1,40 @@
+name: VYRTUA Print DEV CI
+on:
+  push:
+    branches: [development/vyrtua-print-saas]
+    paths: ['print-core/**', '.github/workflows/print-dev-ci.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: print-dev-ci
+  cancel-in-progress: true
+jobs:
+  validation:
+    if: github.ref == 'refs/heads/development/vyrtua-print-saas'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax checks
+        run: |
+          node --check print-core/api.mjs
+          node --check print-core/api-smoke.mjs
+      - name: Unit tests
+        run: node --test print-core/order.test.mjs
+      - name: Development HTTP smoke tests
+        env:
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.PRINT_DEV_PUBLISHABLE_KEY }}
+          TEST_A_EMAIL: ${{ secrets.PRINT_DEV_TEST_A_EMAIL }}
+          TEST_A_PASSWORD: ${{ secrets.PRINT_DEV_TEST_A_PASSWORD }}
+          TEST_B_EMAIL: ${{ secrets.PRINT_DEV_TEST_B_EMAIL }}
+          TEST_B_PASSWORD: ${{ secrets.PRINT_DEV_TEST_B_PASSWORD }}
+        run: |
+          if [ -z "$SUPABASE_PUBLISHABLE_KEY" ] || [ -z "$TEST_A_EMAIL" ] || [ -z "$TEST_A_PASSWORD" ] || [ -z "$TEST_B_EMAIL" ] || [ -z "$TEST_B_PASSWORD" ]; then
+            echo "::warning::HTTP tests NOT RUN: missing test credentials"
+            exit 1
+          fi
+          node print-core/api-smoke.mjs
