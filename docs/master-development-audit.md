@@ -27,3 +27,6 @@ Executado script real de carrinho com DOM e localStorage simulados: entrada nula
 
 ## Browser Integration Lab
 Chromium 144.0.7559.96 iniciado via Playwright em ambiente descartável, viewport 390x844 com toque; teste de botão HTML independente passou. Clone da branch bloqueado por DNS; arquivos reais acessíveis pelo conector, mas não carregados no Chromium neste ciclo. Revisão de produto demonstrou ausência de limite de estoque por quantidade acumulada; corrigido em 83d8139, sintaxe aprovada. Teste Playwright de integração preparado em 738cf1c, não executado. Three 0.160.1 fixado; advisory público GHSA-fq6p-x6j3-cmmq afeta versões anteriores a 0.125.0 (https://npmscan.io/package/npm/three). Não equivale a auditoria completa. Modelo externo tee.glb aponta para main de terceiros, versão e licença não verificadas. Sem atualização cega de dependências, sem contratação, sem merge. Browser integrado e WebGL pendentes.
+
+## Validação do ZIP — Engineering Lab
+ZIP fornecido pelo responsável, 34 entradas. Executado node --test tests/smoke.cjs: 6 testes, 6 aprovados, 0 falhas, duração 122,63 ms. Chromium iniciado via Playwright; navegação file:// para index.html bloqueada por ERR_BLOCKED_BY_ADMINISTRATOR. Homologação funcional permanece pendente; nenhuma tentativa de contornar política do navegador. Sem alterações de produção ou contratação.
