@@ -11,8 +11,16 @@ const product = '22222222-2222-4222-8222-222222222222';
 const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEklEQVR4nGP8z4APMOGVHbHSAEEsAROxCnMTAAAAAElFTkSuQmCC', 'base64');
 
 async function main() {
+  let uploaded;
   const server = createServer(async (req, res) => {
     try {
+      if (req.url === '/mock-artwork' && req.method === 'POST') {
+        const chunks = [];
+        for await (const chunk of req) chunks.push(chunk);
+        uploaded = Buffer.concat(chunks);
+        res.writeHead(201, {'Content-Type': 'application/json'}).end('{}');
+        return;
+      }
       const path = resolve(root, '.' + new URL(req.url, 'http://localhost').pathname);
       if (!path.startsWith(root + sep)) throw Error('Outside test root');
       res.setHeader('Content-Type', mime[extname(path)] ?? 'application/octet-stream');
@@ -31,7 +39,17 @@ async function main() {
     page.setDefaultTimeout(12_000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    let order, uploaded, savedProduct;
+    let order, savedProduct;
+    await page.addInitScript(() => {
+      const originalFetch = window.fetch.bind(window);
+      // WebKit route interception cannot read Blob request bodies.
+      window.fetch = (url, options) => originalFetch(
+        typeof url === 'string' && url.startsWith('https://bwcfrgbvrhwbcjqdbtza.supabase.co/storage/v1/object/print-artworks/')
+          ? '/mock-artwork'
+          : url,
+        options
+      );
+    });
     await page.route('https://bwcfrgbvrhwbcjqdbtza.supabase.co/**', async route => {
       const {pathname} = new URL(route.request().url());
       const method = route.request().method();
@@ -50,10 +68,6 @@ async function main() {
       }
       if (pathname === '/rest/v1/rpc/order_summary') {
         json = [{open_orders: order ? 1 : 0, production_orders: 0, quoted_cents: 0, completed_cents: 0}];
-      }
-      if (pathname.startsWith('/storage/v1/object/print-artworks/')) {
-        uploaded = route.request().postDataBuffer();
-        json = {};
       }
       if (pathname === '/rest/v1/orders') {
         if (method === 'POST') order = {...route.request().postDataJSON(), id: 'order-test', status: 'draft', created_at: new Date().toISOString()};
