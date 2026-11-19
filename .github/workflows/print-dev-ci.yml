@@ -19,7 +19,7 @@ concurrency:
 jobs:
   validation:
     if: github.ref == 'refs/heads/development/vyrtua-print-saas'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +42,7 @@ jobs:
           npx playwright install --with-deps webkit
           node tests/print-mobile.cjs
       - name: Development HTTP smoke tests
+        if: ${{ !cancelled() }}
         env:
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.PRINT_DEV_PUBLISHABLE_KEY }}
           TEST_A_EMAIL: ${{ secrets.PRINT_DEV_TEST_A_EMAIL }}
