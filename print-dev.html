@@ -1,10 +1,65 @@
-<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VYRTUA PRINT DEV</title><style>body{font:16px system-ui;background:#111;color:#fff;max-width:680px;margin:auto;padding:20px}form,section{border:1px solid #555;padding:18px;margin:16px 0;border-radius:12px}label{display:block;margin:12px 0}input,select,button{display:block;width:100%;box-sizing:border-box;padding:12px;font:inherit}button{margin:10px 0}a{color:#9ed}</style><h1>VYRTUA PRINT</h1><p>Ambiente de desenvolvimento. Pedidos são apenas rascunhos.</p><form id="login"><label>Chave publicável DEV<input id="key" required autocomplete="off"></label><label>E-mail<input id="email" type="email" required></label><label>Senha<input id="password" type="password" required></label><button>Entrar</button></form><section id="workspace" hidden><button id="logout">Sair</button><label>Empresa<select id="company"></select></label><form id="draft"><label>Produto<select id="product" required></select></label><label>Estampa original<input id="art" type="file" accept="image/png,image/jpeg,image/webp" required></label><label>Cor<input id="color" required></label><label>Tamanho<input id="size" required></label><label>Quantidade<input id="quantity" type="number" min="1" max="10000" value="1" required></label><label>Lado<select id="side"><option value="front">Frente</option><option value="back">Costas</option></select></label><label>Largura em cm<input id="width" type="number" min="3" max="40" value="20" required></label><label>Escala %<input id="scale" type="number" min="10" max="65" value="30" required></label><label>Posição vertical %<input id="vertical" type="number" min="28" max="64" value="40" required></label><button>Salvar rascunho</button></form></section><p id="status" role="status"></p><script type="module">
-import {createPrintApi} from './print-core/api.mjs';
-const $=id=>document.getElementById(id);let api,busy=false;
-function options(el,rows){el.replaceChildren(new Option('Selecione',''));for(const row of rows)el.add(new Option(row.name,row.id));}
-async function run(fn){if(busy)return;busy=true;const controls=[...document.querySelectorAll('button,select')];controls.forEach(x=>x.disabled=true);try{await fn();}catch(e){$('status').textContent=e.message;}finally{busy=false;controls.forEach(x=>x.disabled=false);}}
-$('login').onsubmit=e=>{e.preventDefault();run(async()=>{api=createPrintApi($('key').value.trim());try{await api.login($('email').value,$('password').value);options($('company'),await api.companies());$('login').hidden=true;$('workspace').hidden=false;$('status').textContent='Selecione sua empresa.';}finally{$('password').value='';}});};
-$('company').onchange=()=>run(async()=>{options($('product'),[]);await api.selectCompany($('company').value);options($('product'),await api.products());$('status').textContent='Catálogo carregado.';});
-$('logout').onclick=()=>run(async()=>{try{await api.logout();}finally{api=null;$('draft').reset();options($('product'),[]);options($('company'),[]);$('workspace').hidden=true;$('login').hidden=false;}});
-$('draft').onsubmit=e=>{e.preventDefault();run(async()=>{await api.draft({product_id:$('product').value,color:$('color').value,size:$('size').value,quantity:+$('quantity').value,side:$('side').value,print_width_cm:+$('width').value,scale_percent:+$('scale').value,vertical_percent:+$('vertical').value},$('art').files[0]);$('art').value='';$('status').textContent='Rascunho registrado.';});};
-</script></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel VYRTUA PRINT</title>
+<link rel="stylesheet" href="assets/css/print-dev.css">
+<script type="module" src="print-core/panel.mjs"></script>
+</head>
+<body>
+<main>
+  <header><p class="brand">VYRTUA PRINT <small>DEV</small></p><h1>Painel de produção</h1></header>
+  <p id="status" role="status" aria-live="polite"></p>
+  <form id="login" class="panel">
+    <h2>Entrar</h2>
+    <label>Chave publicável DEV<input id="key" required autocomplete="off" autocapitalize="none"></label>
+    <label>E-mail<input id="email" type="email" required autocomplete="username" autocapitalize="none"></label>
+    <label>Senha<input id="password" type="password" required autocomplete="current-password"></label>
+    <button>Entrar</button>
+  </form>
+  <div id="workspace" hidden>
+    <div class="toolbar">
+      <label>Empresa<select id="company"></select></label>
+      <button id="logout" class="secondary">Sair</button>
+    </div>
+    <div id="company-panel" hidden>
+      <nav aria-label="Seções do painel"><a href="#dashboard">Visão geral</a><a href="#catalog">Catálogo</a><a href="#personalization">Personalização</a><a href="#production">Pedidos</a></nav>
+      <section id="dashboard">
+        <h2>Visão geral</h2>
+        <dl class="metrics">
+          <div><dt>Pedidos em aberto</dt><dd id="open-orders">—</dd></div>
+          <div><dt>Em produção ou prontos</dt><dd id="production-orders">—</dd></div>
+          <div><dt>Orçamentos aguardando aprovação</dt><dd id="quoted-total">—</dd></div>
+          <div><dt>Valor dos pedidos concluídos</dt><dd id="completed-total">—</dd></div>
+        </dl>
+        <button id="refresh" class="secondary">Atualizar painel</button>
+      </section>
+      <section id="catalog" class="panel">
+        <h2>Catálogo da empresa</h2>
+        <form id="product-form" hidden>
+          <label>Nome<input id="product-name" maxlength="160" required></label>
+          <label>Preço em reais<input id="product-price" type="number" min="0" max="21474836.47" step="0.01" inputmode="decimal"></label>
+          <label class="check"><input id="product-active" type="checkbox">Ativo para novos pedidos</label>
+          <div class="actions"><button id="save-product">Cadastrar produto</button><button type="reset" class="secondary">Limpar</button></div>
+        </form>
+        <ul id="products" class="records"></ul>
+        <div class="actions"><button id="previous-products" class="secondary">Produtos anteriores</button><button id="next-products" class="secondary">Mais produtos</button></div>
+      </section>
+      <section id="personalization" class="panel">
+        <h2>Nova personalização</h2>
+        <label>Produto ativo na página atual<select id="product"></select></label>
+        <p>Para usar um produto de outra página, navegue pelo catálogo acima.</p>
+        <button id="open-editor">Abrir editor visual</button>
+        <div id="editor-slot"></div>
+      </section>
+      <section id="production" class="panel">
+        <h2>Pedidos e produção</h2>
+        <ul id="orders" class="records"></ul>
+        <div class="actions"><button id="previous-orders" class="secondary">Pedidos anteriores</button><button id="next-orders" class="secondary">Mais pedidos</button></div>
+      </section>
+    </div>
+  </div>
+</main>
+</body>
+</html>

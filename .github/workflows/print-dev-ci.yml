@@ -2,7 +2,14 @@ name: VYRTUA Print DEV CI
 on:
   push:
     branches: [development/vyrtua-print-saas]
-    paths: ['print-core/**', '.github/workflows/print-dev-ci.yml']
+    paths:
+      - 'print-core/**'
+      - 'print-dev.html'
+      - 'creative-lab.html'
+      - 'assets/css/print-dev.css'
+      - 'supabase/migrations/**'
+      - 'tests/**'
+      - '.github/workflows/print-dev-ci.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,7 +20,7 @@ jobs:
   validation:
     if: github.ref == 'refs/heads/development/vyrtua-print-saas'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,9 +29,18 @@ jobs:
       - name: Syntax checks
         run: |
           node --check print-core/api.mjs
+          node --check print-core/panel.mjs
+          node --check tests/print-mobile.cjs
           node --check print-core/api-smoke.mjs
       - name: Unit tests
-        run: node --test print-core/order.test.mjs
+        run: node --test print-core/order.test.mjs tests/smoke.cjs
+      - name: Mobile WebKit interface with simulated API
+        env:
+          PRINT_BROWSER: webkit
+        run: |
+          npm install --no-save --package-lock=false playwright@1.51.1
+          npx playwright install --with-deps webkit
+          node tests/print-mobile.cjs
       - name: Development HTTP smoke tests
         env:
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.PRINT_DEV_PUBLISHABLE_KEY }}
