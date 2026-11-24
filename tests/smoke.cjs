@@ -7,5 +7,5 @@ test('homepage local links exist',()=>{for(const m of read('index.html').matchAl
 test('mannequin regression markers',()=>{const s=read('assets/js/mannequins.js');assert.ok(s.includes('white.clone()'));assert.ok(s.includes('o.geometry.dispose()'));assert.ok(s.includes('localWhite.color.setHex'))});
 test('catalog editor preservation markers',()=>{const s=read('editor-catalogo.html');for(const v of ['old.variants','old.printAreas','old.shippingNotes','old.images.slice(1)'])assert.ok(s.includes(v))});
 
-test('lazy viewer module is linked',()=>{assert.match(read('manequins-3d.html'),/src="assets\/js\/mannequins.js"/);assert.match(read('assets/js/mannequins.js'),/lazy\.observe/)});
+test('lazy viewer module is linked',()=>{assert.match(read('manequins-3d.html'),/src="assets\/js\/mannequins.js(?:\?v=\d+)?"/);assert.match(read('assets/js/mannequins.js'),/lazy\.observe/)});
 test('catalog IDs and prices',()=>{const d=JSON.parse(read('data/catalog.json'));assert.equal(new Set(d.products.map(p=>p.id)).size,d.products.length);for(const p of d.products){assert.ok(typeof p.name==='string'&&p.name.trim());assert.ok(typeof p.published==='boolean')}});
